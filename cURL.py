@@ -43,26 +43,40 @@ for req_type in req_types:
         req_url = f'{url}{args[req_type]}'
 
 
-print(http_request_type)
-print(req_url)
+# print(http_request_type)
+# print(req_url)
 
 data = {}
 
-input_bytes = msvcrt.getch()
-if(input_bytes == b'\x18'):
-    send_request = input('Confirm changes to data (Y/N)? ')
-
 
 def process_input_text(text):
-    if(text == str(b'\x18')):
-        print(text)
+    print(text)
 
 
 if (http_request_type == 'post'):
+    print('-----------------------------------------------------')
+    print('\nPress ctrl + X to exit the data editor')
+    print('In the exit stage, press enter to send the request\n')
+    print('-----------------------------------------------------')
+
     print('{\n')
 
-    input_str = input('')
-    process_input_text(input_str)
+    while 1:
+
+        input_bytes = msvcrt.getch()
+        if(input_bytes == b'\x18'):
+            print('}')
+            send_request = input('Confirm changes to data (Y/N)? ')
+
+            if('y' in send_request or 'Y' in send_request):
+                break
+            else:
+                continue
+
+        input_str = input('')
+        process_input_text(input_str)
+
+    input('\nEdit data (Y/N)? -- If no, the request would be sent with the current data \n')
 
 
 def execute_shell_command(shell_command):
