@@ -1,14 +1,27 @@
+import argparse
 import os
 
 # To make into .exe
-# To make usage guide using Python library (Can't rmb the name but is something that allows manipulation of command line inputs or smth)
 
-print('\n\n--------------------------------------')
-print('cURL executable written in Python\n')
-print('Usage guide: \n \'get\' \'post\' \'put\' \'delete\' followed by request route\n')
-print('Example usage: \n get /api/test\n')
+parser = argparse.ArgumentParser(
+    description='HTTP GET, POST, PUT and DELETE request using cURL')
+parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                    help='an integer for the accumulator')
+parser.add_argument('--sum', dest='accumulate',
+                    action='store_const',
+                    const=sum, default=max,
+                    help='sum the integers (default: find the max)')
 
-req_route = input('')
+
+args = parser.parse_args()
+print(args.accumulate(args.integers))
+
+# print('\n\n--------------------------------------')
+# print('cURL executable written in Python\n')
+# print('Usage guide: \n \'get\' \'post\' \'put\' \'delete\' followed by request route\n')
+# print('Example usage: \n get /api/test\n')
+
+# req_route = input('')
 req_url = f'http://localhost:4000/api/user{req_route}'
 
 
