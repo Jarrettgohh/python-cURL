@@ -88,53 +88,53 @@ if(http_request_type == None):
     os.system('py curl.py -h')
     exit()
 
-if((http_request_type == 'post' or http_request_type == 'post') and args['data'] == None):
+# if((http_request_type == 'post' or http_request_type == 'post') and args['data'] == None):
 
-    with_req_body_option = input(prettify_output(
-        '\n Send with request body data (Y/N)? \n', True))
-    with_req_body = process_yes_no(with_req_body_option)
+#     with_req_body_option = input(prettify_output(
+#         '\n Send with request body data (Y/N)? \n', True))
+#     with_req_body = process_yes_no(with_req_body_option)
 
-    if(with_req_body):
+#     if(with_req_body):
 
-        if(not os_path.exists('req_body.txt')):
-            f = open('req_body.txt', 'w+')
+#         if(not os_path.exists('req_body.txt')):
+#             f = open('req_body.txt', 'w+')
 
-            open_txt_file('req_body.txt')
+#             open_txt_file('req_body.txt')
 
-        else:
-            edit_now = prompt_edit_now()
+#         else:
+#             edit_now = prompt_edit_now()
 
-            if(edit_now):
-                open_txt_file('req_body.txt')
+#             if(edit_now):
+#                 open_txt_file('req_body.txt')
 
-        req_body_data = read_txt_file('req_body.txt')
+#         req_body_data = read_txt_file('req_body.txt')
 
-        if(req_body_data != ''):
-            print('\n')
-            print(req_body_data)
-
-
-elif ((http_request_type == 'post' or http_request_type == 'post')):
-    try:
-        edit_now = prompt_edit_now()
-
-        if(edit_now):
-            open_txt_file(args['data'])
-
-            req_body_data = read_txt_file(args['data'])
-
-            if(req_body_data != ''):
-                print('\n')
-                print(req_body_data)
-
-    except:
-        print('Please input a valid file location')
+#         if(req_body_data != ''):
+#             print('\n')
+#             print(req_body_data)
 
 
-else:
-    if (args['data'] != None):
-        print(prettify_output(
-            f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
+# elif ((http_request_type == 'post' or http_request_type == 'post')):
+#     try:
+#         edit_now = prompt_edit_now()
+
+#         if(edit_now):
+#             open_txt_file(args['data'])
+
+#             req_body_data = read_txt_file(args['data'])
+
+#             if(req_body_data != ''):
+#                 print('\n')
+#                 print(req_body_data)
+
+#     except:
+#         print('Please input a valid file location')
+
+
+# else:
+#     if (args['data'] != None):
+#         print(prettify_output(
+#             f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
 
 
 def execute_shell_command(shell_command):
@@ -146,8 +146,20 @@ def GET():
 
 
 # To add params functionality
-def POST():
-    execute_shell_command(f'curl -X POST {req_url}')
+def POST(req_body, req_url):
+    curl_post_command = '\
+    curl\
+    --request POST\
+    -H \"Content-Type: application/json\"'
+
+    curl_post_command_body = f'{curl_post_command} -d \"{req_body}\"'
+    curl_post_command_body_url = f'{curl_post_command_body} {req_url}'
+
+    # print(curl_post_command_body_url)
+    execute_shell_command(curl_post_command_body_url)
+
+    # execute_shell_command(
+    #     f'curl --header "Content-Type: application/json" --request POST --data \'{"username": "xyz", "password": "xyz"}\' {req_url}')
 
 
 # To confirm curl command
@@ -158,3 +170,7 @@ def PUT():
 # To confirm curl command
 def DELETE():
     execute_shell_command(f'curl -x DELETE {req_url}')
+
+
+POST('{\\"name\\":\\"jarrett\\",\\"password\\":\\"my_password\\"}',
+     'http://localhost:4000/api/user/curl')
