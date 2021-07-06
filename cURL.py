@@ -131,10 +131,8 @@ elif ((http_request_type == 'post' or http_request_type == 'post')):
 
 else:
     if (args['data'] != None):
-        print('\n--------------------------------------------------------------------')
-        print(
-            f'\'-d\' flag does not applies for {http_request_type.upper()} request type')
-        print('--------------------------------------------------------------------\n')
+        print(prettify_output(
+            f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
 
 
 def execute_shell_command(shell_command):
