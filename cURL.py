@@ -71,6 +71,12 @@ def format_req_body_json(body):
     return json.dumps(body.replace(' ', '').replace('\n', ''))
 
 
+def call_respective_request_function(http_request_type, req_url, req_body_data):
+    match http_request_type:
+        case 'post':
+            POST(req_url, req_body_data)
+
+
 # vars() to make it iterable
 args = vars(parser.parse_args())
 
@@ -93,53 +99,56 @@ if(http_request_type == None):
     os.system('py curl.py -h')
     exit()
 
-# if((http_request_type == 'post' or http_request_type == 'post') and args['data'] == None):
+if((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete') and args['data'] == None):
 
-#     with_req_body_option = input(prettify_output(
-#         '\n Send with request body data (Y/N)? \n', True))
-#     with_req_body = process_yes_no(with_req_body_option)
+    with_req_body_option = input(prettify_output(
+        '\n Send with request body data (Y/N)? \n', True))
+    with_req_body = process_yes_no(with_req_body_option)
 
-#     if(with_req_body):
+    if(with_req_body):
 
-#         if(not os_path.exists('req_body.txt')):
-#             f = open('req_body.txt', 'w+')
+        if(not os_path.exists('req_body.txt')):
+            f = open('req_body.txt', 'w+')
 
-#             open_txt_file('req_body.txt')
+            open_txt_file('req_body.txt')
 
-#         else:
-#             edit_now = prompt_edit_now()
+        else:
+            edit_now = prompt_edit_now()
 
-#             if(edit_now):
-#                 open_txt_file('req_body.txt')
+            if(edit_now):
+                open_txt_file('req_body.txt')
 
-#         req_body_data = read_txt_file('req_body.txt')
+        req_body_data = read_txt_file('req_body.txt')
 
-#         if(req_body_data != ''):
-#             print('\n')
-#             print(req_body_data)
-
-
-# elif ((http_request_type == 'post' or http_request_type == 'post')):
-#     try:
-#         edit_now = prompt_edit_now()
-
-#         if(edit_now):
-#             open_txt_file(args['data'])
-
-#             req_body_data = read_txt_file(args['data'])
-
-#             if(req_body_data != ''):
-#                 print('\n')
-#                 print(req_body_data)
-
-#     except:
-#         print('Please input a valid file location')
+        if(req_body_data != ''):
+            print('\n')
+            print(req_body_data)
 
 
-# else:
-#     if (args['data'] != None):
-#         print(prettify_output(
-#             f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
+elif ((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete')):
+    try:
+        edit_now = prompt_edit_now()
+
+        if(edit_now):
+            open_txt_file(args['data'])
+
+        req_body_data = read_txt_file(args['data'])
+
+        if(req_body_data != ''):
+            print('\n')
+            print(req_body_data)
+
+            call_respective_request_function(
+                http_request_type, req_url, req_body_data)
+
+    except:
+        print('Please input a valid file location')
+
+
+else:
+    if (args['data'] != None):
+        print(prettify_output(
+            f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
 
 
 def execute_shell_command(shell_command):
@@ -177,9 +186,9 @@ def DELETE():
 
 
 # Experiment where request body is loaded from .txt file
-f = open('req_body.txt', 'r')
+# f = open('req_body.txt', 'r')
 
-POST(
-    'http://localhost:4000/api/user/curl',
-    f.read(),
-)
+# POST(
+#     'http://localhost:4000/api/user/curl',
+#     f.read(),
+# )
