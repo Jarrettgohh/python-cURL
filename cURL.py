@@ -1,7 +1,10 @@
 import argparse
 import os
 import os.path as os_path
-# from termcolor import colored
+from termcolor import colored
+
+
+os.system('color')
 
 # To make into .exe
 # Usage: --<HTTP request type> <request_route>
@@ -81,8 +84,7 @@ for req_type in req_types:
 
 
 if(http_request_type == None):
-    # select_req_type = colored('Please select a request type\n', 'red')
-    print(prettify_output('\nPlease select a request type\n', True))
+    print(prettify_output(colored('\nPlease select a request type\n', 'red'), True))
     os.system('py curl.py -h')
     exit()
 
