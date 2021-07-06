@@ -28,7 +28,7 @@ parser.add_argument('--delete',
                     )
 parser.add_argument('-d', '--data',
                     type=str,
-                    help='DELETE request',
+                    help='Request body data for POST, GET and DELETE',
                     )
 
 
@@ -39,14 +39,28 @@ def process_yes_no(text):
     return False
 
 
+def prompt_edit_now():
+    edit_now_option = input(prettify_output(
+        '\n Would you like to edit the contents now (Y/N)? \n', True))
+    return process_yes_no(edit_now_option)
+
+
 def open_txt_file(txt_file_name):
     os.startfile(txt_file_name)
+    print('\n')
     os.system('pause')
 
 
 def read_txt_file(txt_file_name):
     f = open(txt_file_name, 'r')
     return f.read().replace(' ', '')
+
+
+def prettify_output(output, include_borders=False):
+    if (include_borders):
+        return f'\n-------------------------------------------------------------------- \n {output} \n--------------------------------------------------------------------\n'
+
+    return f'\n{output}\n'
 
 
 # vars() to make it iterable
@@ -68,12 +82,14 @@ for req_type in req_types:
 
 if(http_request_type == None):
     # select_req_type = colored('Please select a request type\n', 'red')
-    print('Please select a request type\n')
+    print(prettify_output('\nPlease select a request type\n', True))
     os.system('py curl.py -h')
     exit()
 
-if(http_request_type == 'post' and args['data'] == None):
-    with_req_body_option = input('Send with request body data (Y/N)? \n')
+if((http_request_type == 'post' or http_request_type == 'post') and args['data'] == None):
+
+    with_req_body_option = input(prettify_output(
+        '\n Send with request body data (Y/N)? \n', True))
     with_req_body = process_yes_no(with_req_body_option)
 
     if(with_req_body):
@@ -84,9 +100,7 @@ if(http_request_type == 'post' and args['data'] == None):
             open_txt_file('req_body.txt')
 
         else:
-            edit_now_option = input(
-                'Would you like to edit the contents now (Y/N)? \n')
-            edit_now = process_yes_no(edit_now_option)
+            edit_now = prompt_edit_now()
 
             if(edit_now):
                 open_txt_file('req_body.txt')
@@ -98,11 +112,9 @@ if(http_request_type == 'post' and args['data'] == None):
             print(req_body_data)
 
 
-else:
+elif ((http_request_type == 'post' or http_request_type == 'post')):
     try:
-        edit_now_option = input(
-            'Would you like to edit the contents now (Y/N)? \n')
-        edit_now = process_yes_no(edit_now_option)
+        edit_now = prompt_edit_now()
 
         if(edit_now):
             open_txt_file(args['data'])
@@ -117,36 +129,12 @@ else:
         print('Please input a valid file location')
 
 
-# print(http_request_type)
-# print(req_url)
-
-data = {}
-
-
-# if (http_request_type == 'post'):
-#     print('-----------------------------------------------------')
-#     print('\nPress ctrl + X to exit the data editor')
-#     print('In the exit stage, press enter to send the request\n')
-#     print('-----------------------------------------------------')
-
-#     print('{\n')
-
-#     while 1:
-
-#         input_bytes = msvcrt.getch()
-#         if(input_bytes == b'\x18'):
-#             print('}')
-#             send_request = input('Confirm changes to data (Y/N)? ')
-
-#             if('y' in send_request or 'Y' in send_request):
-#                 break
-#             else:
-#                 continue
-
-#         input_str = input('')
-#         process_input_text(input_str)
-
-#     input('\nEdit data (Y/N)? -- If no, the request would be sent with the current data \n')
+else:
+    if (args['data'] != None):
+        print('\n--------------------------------------------------------------------')
+        print(
+            f'\'-d\' flag does not applies for {http_request_type.upper()} request type')
+        print('--------------------------------------------------------------------\n')
 
 
 def execute_shell_command(shell_command):
