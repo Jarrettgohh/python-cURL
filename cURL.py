@@ -67,6 +67,10 @@ def prettify_output(output, include_borders=False):
     return f'\n{output}\n'
 
 
+def format_req_body_json(body):
+    return json.dumps(body.replace(' ', '').replace('\n', ''))
+
+
 # vars() to make it iterable
 args = vars(parser.parse_args())
 
@@ -146,21 +150,20 @@ def GET():
     execute_shell_command(f'curl {req_url}')
 
 
-# To add params functionality
-def POST(req_body, req_url):
+def POST(req_url, req_body):
+
+    json_req_body = format_req_body_json(req_body)
+    print(json_req_body)
+
     curl_post_command = '\
     curl\
     --request POST\
     -H \"Content-Type: application/json\"'
 
-    curl_post_command_body = f'{curl_post_command} -d {req_body}'
+    curl_post_command_body = f'{curl_post_command} -d {json_req_body}'
     curl_post_command_body_url = f'{curl_post_command_body} {req_url}'
 
-    # print(curl_post_command_body_url)
     execute_shell_command(curl_post_command_body_url)
-
-    # execute_shell_command(
-    #     f'curl --header "Content-Type: application/json" --request POST --data \'{"username": "xyz", "password": "xyz"}\' {req_url}')
 
 
 # To confirm curl command
@@ -173,13 +176,10 @@ def DELETE():
     execute_shell_command(f'curl -x DELETE {req_url}')
 
 
+# Experiment where request body is loaded from .txt file
 f = open('req_body.txt', 'r')
 
-# print(f.read().replace(' ', '').replace('\n', ''))
-json_test = json.dumps(f.read().replace(' ', '').replace('\n', ''))
-# json_test = json.dumps('{"name":"jarrett","password":"my_password"}')
-
 POST(
-    json_test,
-    # '{\\"name\\":\\"jarrett\\",\\"password\\":\\"my_password\\"}',
-    'http://localhost:4000/api/user/curl')
+    'http://localhost:4000/api/user/curl',
+    f.read(),
+)

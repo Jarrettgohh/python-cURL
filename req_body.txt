@@ -1,3 +1,4 @@
 {
-"heyy": "testt"
+"heyy": "testt",
+"alright": "nice"
 }
