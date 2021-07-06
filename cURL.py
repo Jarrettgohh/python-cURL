@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import os.path as os_path
 from termcolor import colored
@@ -152,7 +153,7 @@ def POST(req_body, req_url):
     --request POST\
     -H \"Content-Type: application/json\"'
 
-    curl_post_command_body = f'{curl_post_command} -d \"{req_body}\"'
+    curl_post_command_body = f'{curl_post_command} -d {req_body}'
     curl_post_command_body_url = f'{curl_post_command_body} {req_url}'
 
     # print(curl_post_command_body_url)
@@ -172,5 +173,13 @@ def DELETE():
     execute_shell_command(f'curl -x DELETE {req_url}')
 
 
-POST('{\\"name\\":\\"jarrett\\",\\"password\\":\\"my_password\\"}',
-     'http://localhost:4000/api/user/curl')
+f = open('req_body.txt', 'r')
+
+# print(f.read().replace(' ', '').replace('\n', ''))
+json_test = json.dumps(f.read().replace(' ', '').replace('\n', ''))
+# json_test = json.dumps('{"name":"jarrett","password":"my_password"}')
+
+POST(
+    json_test,
+    # '{\\"name\\":\\"jarrett\\",\\"password\\":\\"my_password\\"}',
+    'http://localhost:4000/api/user/curl')
