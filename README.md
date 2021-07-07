@@ -3,7 +3,7 @@ Python automation to send REST API requests using cURL
 
 # Usage
 
-Format the request body data for the POST, PUT or DELETE requests
+Format the request body data for the POST, PUT or DELETE requests as follows:
 ```json
 {
 "name": "random_name",
