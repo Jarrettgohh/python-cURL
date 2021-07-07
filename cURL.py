@@ -79,63 +79,23 @@ def execute_shell_command(shell_command):
     os.system(shell_command)
 
 
-def GET():
+def curl_request_without_body():
     execute_shell_command(f'curl {req_url}')
 
 
-def POST(req_url, req_body):
-
-    curl_post_command = '\
-    curl\
-    --request POST\
-    -H \"Content-Type: application/json\"'
+def curl_request_with_body(req_url, req_body):
+    curl_command = '\
+    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"'
 
     if (req_body != None):
         json_req_body = format_req_body_json(req_body)
-        curl_post_command = f'{curl_post_command} -d {json_req_body}'
+        curl_command = f'{curl_command} -d {json_req_body}'
 
     else:
-        curl_post_command = curl_post_command
+        curl_command = curl_command
 
-    curl_post_command = f'{curl_post_command} {req_url}'
-    execute_shell_command(curl_post_command)
-
-
-# To confirm curl command
-def PUT(req_url, req_body):
-
-    curl_put_command = '\
-    curl\
-    --request PUT\
-    -H \"Content-Type: application/json\"'
-
-    if (req_body != None):
-        json_req_body = format_req_body_json(req_body)
-        curl_put_command = f'{curl_put_command} -d {json_req_body}'
-
-    else:
-        curl_put_command = curl_put_command
-
-    curl_put_command = f'{curl_put_command} {req_url}'
-    execute_shell_command(curl_put_command)
-
-
-# To confirm curl command
-def DELETE(req_url, req_body):
-    curl_delete_command = '\
-    curl\
-    --request DELETE\
-    -H \"Content-Type: application/json\"'
-
-    if (req_body != None):
-        json_req_body = format_req_body_json(req_body)
-        curl_delete_command = f'{curl_delete_command} -d {json_req_body}'
-
-    else:
-        curl_delete_command = curl_delete_command
-
-    curl_delete_command = f'{curl_delete_command} {req_url}'
-    execute_shell_command(curl_delete_command)
+    curl_command = f'{curl_command} {req_url}'
+    execute_shell_command(curl_command)
 
 
 def send_request(req_body_data=None):
@@ -152,16 +112,10 @@ def call_respective_request_function(http_request_type, req_url='', req_body_dat
     match_case = http_request_type
 
     if (match_case == 'get'):
-        GET()
-
-    elif (match_case == 'post'):
-        POST(req_url, req_body_data)
-
-    elif(match_case == 'delete'):
-        DELETE(req_url, req_body_data)
+        curl_request_without_body()
 
     else:
-        return
+        curl_request_with_body(req_url, req_body_data)
 
 
 # vars() to make it iterable

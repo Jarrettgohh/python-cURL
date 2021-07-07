@@ -1,5 +1,6 @@
 {
 "type_safe_JS": "TypeScript",
 "data_science": "Python",
-"IOT": "C/C++"
+"IOT": "C/C++",
+"for_fun": "any_programming_language"
 }
