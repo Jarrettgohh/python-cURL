@@ -72,9 +72,17 @@ def format_req_body_json(body):
 
 
 def call_respective_request_function(http_request_type, req_url, req_body_data):
-    match http_request_type:
-        case 'post':
-            POST(req_url, req_body_data)
+
+    match_case = http_request_type
+
+    if (match_case == 'get'):
+        GET()
+
+    elif (match_case == 'post'):
+        POST(req_url, req_body_data)
+
+    else:
+        return
 
 
 # vars() to make it iterable
@@ -98,6 +106,7 @@ if(http_request_type == None):
     print(prettify_output(colored('\nPlease select a request type\n', 'red'), True))
     os.system('py curl.py -h')
     exit()
+
 
 if((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete') and args['data'] == None):
 
@@ -123,6 +132,9 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
         if(req_body_data != ''):
             print('\n')
             print(req_body_data)
+
+            call_respective_request_function(
+                http_request_type, req_url, req_body_data)
 
 
 elif ((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete')):
