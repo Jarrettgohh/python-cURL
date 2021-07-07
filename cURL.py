@@ -200,12 +200,3 @@ else:
             colored(f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', 'red'), True, 'yellow'))
 
     call_respective_request_function(http_request_type)
-
-
-# Experiment where request body is loaded from .txt file
-# f = open('req_body.txt', 'r')
-
-# POST(
-#     'http://localhost:4000/api/user/curl',
-#     f.read(),
-# )
