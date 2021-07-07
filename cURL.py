@@ -56,7 +56,7 @@ def prompt_edit_now():
 def open_txt_file(txt_file_name):
     os.startfile(txt_file_name)
     print('\n')
-    os.system('pause')
+    os.system('pause')  # Press any key to continue...
 
 
 def read_txt_file(txt_file_name):
@@ -85,17 +85,20 @@ def GET():
 
 def POST(req_url, req_body):
 
-    json_req_body = format_req_body_json(req_body)
-
     curl_post_command = '\
     curl\
     --request POST\
     -H \"Content-Type: application/json\"'
 
-    curl_post_command_body = f'{curl_post_command} -d {json_req_body}'
-    curl_post_command_body_url = f'{curl_post_command_body} {req_url}'
+    if (req_body != None):
+        json_req_body = format_req_body_json(req_body)
+        curl_post_command = f'{curl_post_command} -d {json_req_body}'
 
-    execute_shell_command(curl_post_command_body_url)
+    else:
+        curl_post_command = curl_post_command
+
+    curl_post_command = f'{curl_post_command} {req_url}'
+    execute_shell_command(curl_post_command)
 
 
 # To confirm curl command
@@ -168,11 +171,19 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
         req_body_data = read_txt_file('req_body.txt')
 
         if(req_body_data != ''):
-            print(f'\n\nSending {http_request_type} request with body data:')
+            print(
+                colored(f'\n\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(' with body:', 'green'))
             print(prettify_output(req_body_data))
 
             call_respective_request_function(
                 http_request_type, req_url, req_body_data)
+
+        else:
+            print('Request body is empty')
+            exit()
+
+    else:
+        call_respective_request_function(http_request_type, req_url)
 
 
 elif ((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete')):
@@ -190,6 +201,10 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
 
             call_respective_request_function(
                 http_request_type, req_url, req_body_data)
+
+        else:
+            print('Request body is empty')
+            exit()
 
     except:
         print('Please input a valid file location')
