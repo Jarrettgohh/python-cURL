@@ -104,16 +104,47 @@ def POST(req_url, req_body):
 # To confirm curl command
 def PUT(req_url, req_body):
 
-    curl_post_command = '\
+    curl_put_command = '\
     curl\
-    --request POST\
+    --request PUT\
     -H \"Content-Type: application/json\"'
-    execute_shell_command(f'curl -x PUT {req_url}')
+
+    if (req_body != None):
+        json_req_body = format_req_body_json(req_body)
+        curl_put_command = f'{curl_put_command} -d {json_req_body}'
+
+    else:
+        curl_put_command = curl_put_command
+
+    curl_put_command = f'{curl_put_command} {req_url}'
+    execute_shell_command(curl_put_command)
 
 
 # To confirm curl command
-def DELETE():
-    execute_shell_command(f'curl -x DELETE {req_url}')
+def DELETE(req_url, req_body):
+    curl_delete_command = '\
+    curl\
+    --request DELETE\
+    -H \"Content-Type: application/json\"'
+
+    if (req_body != None):
+        json_req_body = format_req_body_json(req_body)
+        curl_delete_command = f'{curl_delete_command} -d {json_req_body}'
+
+    else:
+        curl_delete_command = curl_delete_command
+
+    curl_delete_command = f'{curl_delete_command} {req_url}'
+    execute_shell_command(curl_delete_command)
+
+
+def send_request(req_body_data=None):
+    print(
+        prettify_output(
+            colored(f'\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(f' with body:\n', 'green') + f'{prettify_output(req_body_data)}', True, 'yellow'))
+
+    call_respective_request_function(
+        http_request_type, req_url, req_body_data)
 
 
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
@@ -125,6 +156,9 @@ def call_respective_request_function(http_request_type, req_url='', req_body_dat
 
     elif (match_case == 'post'):
         POST(req_url, req_body_data)
+
+    elif(match_case == 'delete'):
+        DELETE(req_url, req_body_data)
 
     else:
         return
@@ -176,12 +210,7 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
         req_body_data = read_txt_file('req_body.txt')
 
         if(req_body_data != ''):
-            print(
-                prettify_output(
-                    colored(f'\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(f' with body:\n', 'green') + f'{prettify_output(req_body_data)}', True, 'yellow'))
-
-            call_respective_request_function(
-                http_request_type, req_url, req_body_data)
+            send_request(req_body_data)
 
         else:
             print('Request body is empty')
@@ -201,12 +230,7 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
         req_body_data = read_txt_file(args['data'])
 
         if(req_body_data != ''):
-            print(
-                prettify_output(
-                    colored(f'\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(f' with body:\n', 'green') + f'{prettify_output(req_body_data)}', True, 'yellow'))
-
-            call_respective_request_function(
-                http_request_type, req_url, req_body_data)
+            send_request(req_body_data)
 
         else:
             print('Request body is empty')
@@ -219,7 +243,7 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
 else:
     if (args['data'] != None):
         print(prettify_output(
-            f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
+            colored(f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', 'red'), True, 'yellow'))
 
     call_respective_request_function(http_request_type)
 

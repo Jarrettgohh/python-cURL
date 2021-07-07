@@ -1,5 +1,5 @@
 {
-"editing": "random",
 "type_safe_JS": "TypeScript",
-"data_science": "Python"
+"data_science": "Python",
+"IOT": "C/C++"
 }
