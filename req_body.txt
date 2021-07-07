@@ -1,4 +1,5 @@
 {
-"heyy": "testt",
-"alright": "niceeeee"
+"editing": "random",
+"type_safe_JS": "TypeScript",
+"data_science": "Python"
 }

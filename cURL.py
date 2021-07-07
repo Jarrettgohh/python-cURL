@@ -64,9 +64,9 @@ def read_txt_file(txt_file_name):
     return f.read().replace(' ', '')
 
 
-def prettify_output(output, include_borders=False):
+def prettify_output(output, include_borders=False, border_color='white'):
     if (include_borders):
-        return f'\n-------------------------------------------------------------------- \n {output} \n--------------------------------------------------------------------\n'
+        return '\n' + colored('--------------------------------------------------------------------', border_color) + '\n' + f'{output}' + '\n' + colored('--------------------------------------------------------------------', border_color) + '\n'
 
     return f'\n{output}\n'
 
@@ -102,7 +102,12 @@ def POST(req_url, req_body):
 
 
 # To confirm curl command
-def PUT():
+def PUT(req_url, req_body):
+
+    curl_post_command = '\
+    curl\
+    --request POST\
+    -H \"Content-Type: application/json\"'
     execute_shell_command(f'curl -x PUT {req_url}')
 
 
@@ -172,8 +177,8 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
 
         if(req_body_data != ''):
             print(
-                colored(f'\n\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(' with body:', 'green'))
-            print(prettify_output(req_body_data))
+                prettify_output(
+                    colored(f'\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(f' with body:\n', 'green') + f'{prettify_output(req_body_data)}', True, 'yellow'))
 
             call_respective_request_function(
                 http_request_type, req_url, req_body_data)
@@ -196,8 +201,9 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
         req_body_data = read_txt_file(args['data'])
 
         if(req_body_data != ''):
-            print(f'\n\nSending {http_request_type} request with body data:')
-            print(prettify_output(req_body_data))
+            print(
+                prettify_output(
+                    colored(f'\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(f' with body:\n', 'green') + f'{prettify_output(req_body_data)}', True, 'yellow'))
 
             call_respective_request_function(
                 http_request_type, req_url, req_body_data)
