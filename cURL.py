@@ -86,7 +86,6 @@ def GET():
 def POST(req_url, req_body):
 
     json_req_body = format_req_body_json(req_body)
-    print(json_req_body)
 
     curl_post_command = '\
     curl\
@@ -127,7 +126,7 @@ def call_respective_request_function(http_request_type, req_url='', req_body_dat
 args = vars(parser.parse_args())
 
 
-url = 'http://localhost:4000/api/user' if args['url'] == None else args['url']
+url = 'http://localhost:4000' if args['url'] == None else args['url']
 req_types = ['get', 'post', 'put', 'delete']
 
 http_request_type = None
@@ -169,8 +168,8 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
         req_body_data = read_txt_file('req_body.txt')
 
         if(req_body_data != ''):
-            print('\n')
-            print(req_body_data)
+            print(f'\n\nSending {http_request_type} request with body data:')
+            print(prettify_output(req_body_data))
 
             call_respective_request_function(
                 http_request_type, req_url, req_body_data)
@@ -186,8 +185,8 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
         req_body_data = read_txt_file(args['data'])
 
         if(req_body_data != ''):
-            print('\n')
-            print(req_body_data)
+            print(f'\n\nSending {http_request_type} request with body data:')
+            print(prettify_output(req_body_data))
 
             call_respective_request_function(
                 http_request_type, req_url, req_body_data)
