@@ -34,6 +34,10 @@ parser.add_argument('-d', '--data',
                     type=str,
                     help='Request body data for POST, GET and DELETE',
                     )
+parser.add_argument('-u', '--url',
+                    type=str,
+                    help='Optionally give an URL, else default would be used',
+                    )
 
 
 def process_yes_no(text):
@@ -71,7 +75,41 @@ def format_req_body_json(body):
     return json.dumps(body.replace(' ', '').replace('\n', ''))
 
 
-def call_respective_request_function(http_request_type, req_url, req_body_data):
+def execute_shell_command(shell_command):
+    os.system(shell_command)
+
+
+def GET():
+    execute_shell_command(f'curl {req_url}')
+
+
+def POST(req_url, req_body):
+
+    json_req_body = format_req_body_json(req_body)
+    print(json_req_body)
+
+    curl_post_command = '\
+    curl\
+    --request POST\
+    -H \"Content-Type: application/json\"'
+
+    curl_post_command_body = f'{curl_post_command} -d {json_req_body}'
+    curl_post_command_body_url = f'{curl_post_command_body} {req_url}'
+
+    execute_shell_command(curl_post_command_body_url)
+
+
+# To confirm curl command
+def PUT():
+    execute_shell_command(f'curl -x PUT {req_url}')
+
+
+# To confirm curl command
+def DELETE():
+    execute_shell_command(f'curl -x DELETE {req_url}')
+
+
+def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
     match_case = http_request_type
 
@@ -88,7 +126,8 @@ def call_respective_request_function(http_request_type, req_url, req_body_data):
 # vars() to make it iterable
 args = vars(parser.parse_args())
 
-url = 'http://localhost:4000/api/user'
+
+url = 'http://localhost:4000/api/user' if args['url'] == None else args['url']
 req_types = ['get', 'post', 'put', 'delete']
 
 http_request_type = None
@@ -162,39 +201,7 @@ else:
         print(prettify_output(
             f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', True))
 
-
-def execute_shell_command(shell_command):
-    os.system(shell_command)
-
-
-def GET():
-    execute_shell_command(f'curl {req_url}')
-
-
-def POST(req_url, req_body):
-
-    json_req_body = format_req_body_json(req_body)
-    print(json_req_body)
-
-    curl_post_command = '\
-    curl\
-    --request POST\
-    -H \"Content-Type: application/json\"'
-
-    curl_post_command_body = f'{curl_post_command} -d {json_req_body}'
-    curl_post_command_body_url = f'{curl_post_command_body} {req_url}'
-
-    execute_shell_command(curl_post_command_body_url)
-
-
-# To confirm curl command
-def PUT():
-    execute_shell_command(f'curl -x PUT {req_url}')
-
-
-# To confirm curl command
-def DELETE():
-    execute_shell_command(f'curl -x DELETE {req_url}')
+    call_respective_request_function(http_request_type)
 
 
 # Experiment where request body is loaded from .txt file
