@@ -11,19 +11,19 @@ py curl.py --get /api/route
 ```
 
 POST
-- Would be prompted to select or edit request body
+- Prompt to select or edit request body
 ```bash
 py curl.py --post /api/route  
 ```
 
 PUT
-- Would be prompted to select or edit request body
+- Prompt to select or edit request body
 ```bash
 py curl.py --put /api/route  
 ```
 
 DELETE
-- Would be prompted to select or edit request body
+- Prompt to select or edit request body
 ```bash
 py curl.py --delete /api/route  
 ```
