@@ -51,5 +51,14 @@ Format the request body data for the POST, PUT or DELETE requests as follows:
 }
 ```
 
+Formats that would give an error (To be improved):
+- Comma at the end of the last field
+```json
+{
+"name": "random_name",
+"data": "random_data",
+}
+```
+
 # To Note
 Currently only supports Window -- Not tested on other OS yet such as MacOS and Linux
