@@ -66,4 +66,4 @@ Formats that would give an error (To be improved):
 
 # Add-on ideas
 - Support for array and object to be sent in the request body
-- 
+- Feature to cache the request route URL within a .txt file
