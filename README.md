@@ -63,3 +63,7 @@ Formats that would give an error (To be improved):
 # To Note
 - Currently only supports Window -- Not tested on other OS yet such as MacOS and Linux
 - Only works with fields containing one layer string; but not nested items such as object or arrays of any sort
+
+# Add-on ideas
+- Support for array and object to be sent in the request body
+- 
