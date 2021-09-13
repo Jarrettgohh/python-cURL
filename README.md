@@ -31,15 +31,22 @@ py curl.py --delete /api/route
 Adding custom path for request body data
 - Else defaults to `req_body.txt`
 ```bash
-py curl.py --<method> /api/route -d <custom_path>
-py curl.py --<method> /api/route --data <custom_path>
+py curl.py --<method> /api/route -d custom_path
+py curl.py --<method> /api/route --data custom_path
  ```
  
 Adding custom url
-- Else defaults to `'http://localhost:4000'`
+- Else defaults to `http://localhost:4000`
 ```bash
-py curl.py --<method> /api/route -u <custom_url>
-py curl.py --<method> /api/route --url <custom_url>
+py curl.py --<method> /api/route -u custom_url
+py curl.py --<method> /api/route --url custom_url
+```
+
+Adding custom headers
+- Else it would only contain `"Content-Type: application/json"`
+```bash
+py curl.py --<method> /api/route -H "x-custom-header: header_value"
+>y curl.py --<method> /api/route --header "x-custom-header: header_value"
 ```
 
 
