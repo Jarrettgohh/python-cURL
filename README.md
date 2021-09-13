@@ -29,17 +29,25 @@ py curl.py --delete /api/route
 ```
 
 Adding custom path for request body data
-- Else defaults to req_body.txt
+- Else defaults to `req_body.txt`
 ```bash
-py curl.py --<method> /api/route -d <custom_path>
-py curl.py --<method> /api/route --data <custom_path>
+py curl.py --<method> /api/route -d custom_path
+py curl.py --<method> /api/route --data custom_path
  ```
  
 Adding custom url
-- Else defaults to 'http://localhost:4000'
+- Else defaults to `http://localhost:4000`
 ```bash
-py curl.py --<method> /api/route -u <custom_url>
-py curl.py --<method> /api/route --url <custom_url>
+py curl.py --<method> /api/route -u custom_url
+py curl.py --<method> /api/route --url custom_url
+```
+
+Adding custom headers
+- Else it would only contain `"Content-Type: application/json"`
+- Currently only supports adding one extra custom headers; as of now
+```bash
+py curl.py --<method> /api/route -H "x-custom-header: header_value"
+>y curl.py --<method> /api/route --header "x-custom-header: header_value"
 ```
 
 
@@ -63,3 +71,7 @@ Formats that would give an error (To be improved):
 # To Note
 - Currently only supports Window -- Not tested on other OS yet such as MacOS and Linux
 - Only works with fields containing one layer string; but not nested items such as object or arrays of any sort
+
+# Add-on ideas
+- Support for array and object to be sent in the request body
+- Feature to cache the request route URL within a .txt file
