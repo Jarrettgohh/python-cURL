@@ -34,6 +34,10 @@ parser.add_argument('-d', '--data',
                     type=str,
                     help='Request body data for POST, GET and DELETE',
                     )
+parser.add_argument('-H', '--headers',
+                    type=str,
+                    help='To provide request headers',
+                    )
 parser.add_argument('-u', '--url',
                     type=str,
                     help='Optionally give an URL, else default would be used',
@@ -84,8 +88,11 @@ def curl_request_without_body():
 
 
 def curl_request_with_body(req_url, req_body):
+
+    custom_header = args['headers']
+
     curl_command = '\
-    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"'
+    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + f' -H {custom_header}'
 
     if (req_body != None):
         json_req_body = format_req_body_json(req_body)
