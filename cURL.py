@@ -34,10 +34,6 @@ parser.add_argument('-d', '--data',
                     type=str,
                     help='Request body data for POST, GET and DELETE',
                     )
-parser.add_argument('-H', '--headers',
-                    type=str,
-                    help='To provide request headers',
-                    )
 parser.add_argument('-u', '--url',
                     type=str,
                     help='Optionally give an URL, else default would be used',
@@ -87,12 +83,10 @@ def curl_request_without_body():
     execute_shell_command(f'curl {req_url}')
 
 
-def curl_request_with_body(req_url, req_body):
-
-    custom_header = args['headers']
+def curl_request_with_body(req_url, req_body, req_headers):
 
     curl_command = '\
-    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + f' -H {custom_header}'
+    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + f' -H {req_headers}'
 
     if (req_body != None):
         json_req_body = format_req_body_json(req_body)
@@ -117,12 +111,13 @@ def send_request(req_body_data=None):
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
     match_case = http_request_type
+    req_headers = read_txt_file('req_headers.txt')
 
     if (match_case == 'get'):
         curl_request_without_body()
 
     else:
-        curl_request_with_body(req_url, req_body_data)
+        curl_request_with_body(req_url, req_body_data, req_headers)
 
 
 # vars() to make it iterable

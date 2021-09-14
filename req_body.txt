@@ -3,7 +3,5 @@
   "name": "",
   "email": "jarrettgoh.xz@gmail.com",
   "mobileNumber": "81098403",
-  "verificationJwt": "token",
-  "OTP": "512012",
-  "signUpToken": "ranfom"
+  "signUpToken": ""
 }
