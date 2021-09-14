@@ -1,6 +1,5 @@
 # python-cURL
-Python automation to send REST API requests using cURL
-
+Python automation to send REST API requests using `cURL`
 # Usage
 
 To run the script
@@ -46,8 +45,8 @@ Adding custom headers
 - Else it would only contain `"Content-Type: application/json"`
 - Currently only supports adding one extra custom headers; as of now
 ```bash
-py curl.py --<method> /api/route -H "x-custom-header: header_value"
->y curl.py --<method> /api/route --header "x-custom-header: header_value"
+py curl.py --<method> /api/route -H "\"x-custom-header: header_value\""
+py curl.py --<method> /api/route --header "\"x-custom-header: header_value\""
 ```
 
 
@@ -69,7 +68,7 @@ Formats that would give an error (To be improved):
 ```
 
 # To Note
-- Currently only supports Window -- Not tested on other OS yet such as MacOS and Linux
+- Supports any OS that has the `cURL` executable, that can be ran on a proper bash/terminal/command prompt or any type of command shell. To date, this software has only been tested on Window -- Not tested on other OS yet such as MacOS and Linux. However, it would probably work too as these OS suppports `cURL`.
 - Only works with fields containing one layer string; but not nested items such as object or arrays of any sort
 
 # Add-on ideas
