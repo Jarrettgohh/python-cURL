@@ -1,6 +1,5 @@
 # python-cURL
-Python automation to send REST API requests using cURL
-
+Python automation to send REST API requests using `cURL`
 # Usage
 
 To run the script
