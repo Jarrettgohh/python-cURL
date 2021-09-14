@@ -69,7 +69,7 @@ Formats that would give an error (To be improved):
 ```
 
 # To Note
-- Supports any OS that is able to has the `cURL` executable, that can be ran on a proper bash/terminal/command prompt or any type of command shell. To date, this software has only been tested on Window -- Not tested on other OS yet such as MacOS and Linux. However, it would probably work too as these OS suppports `cURL` too.
+- Supports any OS that has the `cURL` executable, that can be ran on a proper bash/terminal/command prompt or any type of command shell. To date, this software has only been tested on Window -- Not tested on other OS yet such as MacOS and Linux. However, it would probably work too as these OS suppports `cURL` too.
 - Only works with fields containing one layer string; but not nested items such as object or arrays of any sort
 
 # Add-on ideas
