@@ -44,9 +44,10 @@ py curl.py --<method> /api/route --url custom_url
 Adding custom headers
 - Else it would only contain one custom header: `"Content-Type: application/json"`
 - Currently only supports adding one extra custom headers; as of now
+- The script would remove all the `\n` in the contents of req_headers.txt so as to prevent the `cURL` method call from being corrupted -> `.replace('\n', '')`
 - Simply enter the header information in the `req_headers.txt` file with the following format:
 ```json
-"x-custom-header": "header_value"
+"x-custom-header: "header_value
 
 ```
 
