@@ -86,7 +86,7 @@ def curl_request_without_body():
 def curl_request_with_body(req_url, req_body, req_headers):
 
     curl_command = '\
-    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + f' -H {req_headers}'
+    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + (f' -H {req_headers}' if req_headers != '' else '')
 
     if (req_body != None):
         json_req_body = format_req_body_json(req_body)
@@ -96,6 +96,8 @@ def curl_request_with_body(req_url, req_body, req_headers):
         curl_command = curl_command
 
     curl_command = f'{curl_command} {req_url}'
+
+    print(curl_command)
     execute_shell_command(curl_command)
 
 
@@ -111,12 +113,14 @@ def send_request(req_body_data=None):
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
     match_case = http_request_type
-    req_headers = read_txt_file('req_headers.txt')
+    req_headers = read_txt_file('req_headers.txt').replace('\n', '')
+    print(req_headers)
 
     if (match_case == 'get'):
         curl_request_without_body()
 
     else:
+        # Actually is for any request type besides 'GET' even without body; to refactor to be more clear
         curl_request_with_body(req_url, req_body_data, req_headers)
 
 

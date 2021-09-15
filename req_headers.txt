@@ -1,1 +1,2 @@
-"x-sign-up-token": "test_token"
+"x-sign-up-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxNjI5MTg5NDA1MjExYzZiZmQyODctNzJmMC00YjczLWFiMzItNmFhYTZmODY5NmFiIiwiZXhwaXJlcyI6MTYzMTcxNzcyMDEwOCwiaWF0IjoxNjMxNzE3NjAwfQ.Qh9TSpkJyW_904WxkbZ7hz-8
+Tt_9EujmBOuehrrDjos"
