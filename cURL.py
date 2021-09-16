@@ -53,15 +53,24 @@ def prompt_edit_now():
     return process_yes_no(edit_now_option)
 
 
-def open_txt_file(txt_file_name):
-    os.startfile(txt_file_name)
+def format_json(req_body):
+    return json.dumps(req_body.replace(' ', '').replace('\n', ''))
+
+
+def read_txt_file(txt_file_name):
+    file = open(txt_file_name, 'r')
+    return file.read().replace('\n', '')
+
+
+def edit_json(json_file_name):
+    os.startfile(json_file_name)
     print('\n')
     os.system('pause')  # Press any key to continue...
 
 
-def read_txt_file(txt_file_name):
-    f = open(txt_file_name, 'r')
-    return f.read().replace(' ', '')
+def read_json(json_file_name):
+    with open(json_file_name) as file:
+        return json.load(file)
 
 
 def prettify_output(output, include_borders=False, border_color='white'):
@@ -69,10 +78,6 @@ def prettify_output(output, include_borders=False, border_color='white'):
         return '\n' + colored('--------------------------------------------------------------------', border_color) + '\n' + f'{output}' + '\n' + colored('--------------------------------------------------------------------', border_color) + '\n'
 
     return f'\n{output}\n'
-
-
-def format_req_body_json(body):
-    return json.dumps(body.replace(' ', '').replace('\n', ''))
 
 
 def execute_shell_command(shell_command):
@@ -89,8 +94,8 @@ def curl_request_with_body(req_url, req_body, req_headers):
     curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + (f' -H {req_headers}' if req_headers != '' else '')
 
     if (req_body != None):
-        json_req_body = format_req_body_json(req_body)
-        curl_command = f'{curl_command} -d {json_req_body}'
+        formatted_req_body = format_json(req_body)
+        curl_command = f'{curl_command} -d {formatted_req_body}'
 
     else:
         curl_command = curl_command
@@ -102,6 +107,8 @@ def curl_request_with_body(req_url, req_body, req_headers):
 
 
 def send_request(req_body_data=None):
+    req_body_data = json.dumps(req_body_data, indent=2)
+
     print(
         prettify_output(
             colored(f'\nSending {http_request_type.upper()} request to ', 'green') + colored(req_url, 'yellow') + colored(f' with body:\n', 'green') + f'{prettify_output(req_body_data)}', True, 'yellow'))
@@ -113,9 +120,7 @@ def send_request(req_body_data=None):
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
     match_case = http_request_type
-    req_headers = read_txt_file('req_headers.txt').replace('\n', '')
-    print(req_headers)
-
+    req_headers = read_txt_file('req_headers.txt')
     if (match_case == 'get'):
         curl_request_without_body()
 
@@ -156,18 +161,18 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
 
     if(with_req_body):
 
-        if(not os_path.exists('req_body.txt')):
-            f = open('req_body.txt', 'w+')
+        if(not os_path.exists('req_body.json')):
+            f = open('req_body.json', 'w+')
 
-            open_txt_file('req_body.txt')
+            edit_json('req_body.json')
 
         else:
             edit_now = prompt_edit_now()
 
             if(edit_now):
-                open_txt_file('req_body.txt')
+                edit_json('req_body.json')
 
-        req_body_data = read_txt_file('req_body.txt')
+        req_body_data = read_json('req_body.json')
 
         if(req_body_data != ''):
             send_request(req_body_data)
@@ -185,9 +190,9 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
         edit_now = prompt_edit_now()
 
         if(edit_now):
-            open_txt_file(args['data'])
+            edit_json(args['data'])
 
-        req_body_data = read_txt_file(args['data'])
+        req_body_data = read_json(args['data'])
 
         if(req_body_data != ''):
             send_request(req_body_data)

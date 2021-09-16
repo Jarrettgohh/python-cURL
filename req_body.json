@@ -1,0 +1,17 @@
+{
+  "name": "Jarrett goh xiangggg zheng",
+  "email": "jarrettgoh.xz@gmail.com",
+  "password": "rabdom_password",
+  "tags": [
+    {
+      "tagId": "1",
+      "name": "Sports",
+      "icon": "trophy"
+    }
+  ],
+  "location": {
+    "latitude": 10,
+    "longitude": 20
+  },
+  "getUploadImageUrl": false
+}
