@@ -54,7 +54,7 @@ def prompt_edit_now():
 
 
 def format_json(req_body):
-    return json.dumps(req_body.replace(' ', '').replace('\n', ''))
+    return json.dumps(req_body.replace('\n', ''))
 
 
 def read_txt_file(txt_file_name):
