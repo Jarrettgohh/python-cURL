@@ -75,4 +75,4 @@ Formats that would give an error (To be improved):
 # Add-on ideas
 - Support for array and object to be sent in the request body
 - Feature to cache the request route URL within a .txt file
-- Sending multiple request for rate limit testing of server routes
+- Sending multiple requests for rate limit testing of server routes
