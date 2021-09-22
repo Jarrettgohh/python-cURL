@@ -1,5 +1,5 @@
 {
-  "name": "Jeff the Killer",
+  "name": "PennyWise",
   "email": "jarrettgoh.xz@gmail.com",
   "password": "rabdom_password",
   "tags": [
@@ -13,5 +13,6 @@
     "latitude": 10,
     "longitude": 20
   },
-  "getUploadImageUrl": false
+  "getUploadImageUrl": false,
+  "isOptedIn": true
 }

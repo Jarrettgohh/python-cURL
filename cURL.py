@@ -39,6 +39,11 @@ parser.add_argument('-u', '--url',
                     help='Optionally give an URL, else default would be used',
                     )
 
+parser.add_argument('-r', '--repeat',
+                    type=str,
+                    help='Set the amount of times the request should be sent, defaults to 1.',
+                    )
+
 
 def process_yes_no(text):
     if('y' in text or 'Y' in text):
@@ -102,11 +107,10 @@ def curl_request_with_body(req_url, req_body, req_headers):
 
     curl_command = f'{curl_command} {req_url}'
 
-    print(curl_command)
     execute_shell_command(curl_command)
 
 
-def send_request(req_body_data=None):
+def send_request_with_body(req_body_data=None):
     req_body_data = json.dumps(req_body_data, indent=2)
 
     print(
@@ -119,8 +123,11 @@ def send_request(req_body_data=None):
 
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
+    print(req_repeat)
+
     match_case = http_request_type
     req_headers = read_txt_file('req_headers.txt')
+
     if (match_case == 'get'):
         curl_request_without_body()
 
@@ -135,6 +142,7 @@ args = vars(parser.parse_args())
 
 url = 'http://localhost:4000' if args['url'] == None else args['url']
 req_types = ['get', 'post', 'put', 'delete']
+req_repeat = args['repeat']
 
 http_request_type = None
 
@@ -147,12 +155,15 @@ for req_type in req_types:
         req_url = f'{url}{args[req_type]}'
 
 
+# Request type not specified
+# Print the help message
 if(http_request_type == None):
     print(prettify_output(colored('\nPlease select a request type\n', 'red'), True))
     os.system('py curl.py -h')
     exit()
 
 
+# Request type is POST, PUT or DElETE with NO `-d` parameter passed in
 if((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete') and args['data'] == None):
 
     with_req_body_option = input(prettify_output(
@@ -175,7 +186,7 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
         req_body_data = read_json('req_body.json')
 
         if(req_body_data != ''):
-            send_request(req_body_data)
+            send_request_with_body(req_body_data)
 
         else:
             print('Request body is empty')
@@ -185,6 +196,7 @@ if((http_request_type == 'post' or http_request_type == 'put' or http_request_ty
         call_respective_request_function(http_request_type, req_url)
 
 
+# Request type is POST, PUT or DElETE with `-d` flag passed in
 elif ((http_request_type == 'post' or http_request_type == 'put' or http_request_type == 'delete')):
     try:
         edit_now = prompt_edit_now()
@@ -195,7 +207,7 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
         req_body_data = read_json(args['data'])
 
         if(req_body_data != ''):
-            send_request(req_body_data)
+            send_request_with_body(req_body_data)
 
         else:
             print('Request body is empty')
@@ -205,7 +217,10 @@ elif ((http_request_type == 'post' or http_request_type == 'put' or http_request
         print('Please input a valid file location')
 
 
+# GET request
 else:
+
+    # If `-d` flag passed in -> Display error message
     if (args['data'] != None):
         print(prettify_output(
             colored(f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n', 'red'), True, 'yellow'))
