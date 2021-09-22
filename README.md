@@ -27,7 +27,7 @@ DELETE
 py curl.py --delete /api/route  
 ```
 
-Adding custom path for request body data
+###Adding custom path for request body data
 - Else defaults to `req_body.txt`
 ```bash
 py curl.py --<method> /api/route -d custom_path
