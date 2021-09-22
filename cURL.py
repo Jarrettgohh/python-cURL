@@ -141,7 +141,7 @@ args = vars(parser.parse_args())
 
 url = 'http://localhost:4000' if args['url'] == None else args['url']
 req_types = ['get', 'post', 'put', 'delete']
-req_repeat = args['repeat']
+req_repeat = 1 if args['repeat'] == None else args['repeat']
 
 http_request_type = None
 
