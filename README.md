@@ -50,6 +50,7 @@ py curl.py --<method> /api/route --repeat number_of_times_to_send
 ```
 
 - The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too, to set a time period for the request to be sent
+- The time `-t` or `--time` defaults to `1 minute`
 
 ```bash
 py curl.py --<method> /api/route -r number_of_times_to_send -t time_period
