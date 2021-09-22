@@ -123,7 +123,7 @@ def send_request_with_body(req_body_data=None):
 
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
-    for _ in range(req_repeat):
+    for _ in range(int(req_repeat)):
 
         req_headers = read_txt_file('req_headers.txt')
 
