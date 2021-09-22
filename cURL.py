@@ -123,17 +123,16 @@ def send_request_with_body(req_body_data=None):
 
 def call_respective_request_function(http_request_type, req_url='', req_body_data=None):
 
-    print(req_repeat)
+    for _ in range(req_repeat):
 
-    match_case = http_request_type
-    req_headers = read_txt_file('req_headers.txt')
+        req_headers = read_txt_file('req_headers.txt')
 
-    if (match_case == 'get'):
-        curl_request_without_body()
+        if (http_request_type == 'get'):
+            curl_request_without_body()
 
-    else:
-        # Actually is for any request type besides 'GET' even without body; to refactor to be more clear
-        curl_request_with_body(req_url, req_body_data, req_headers)
+        else:
+            # Actually is for any request type besides 'GET' even without body; to refactor to be more clear
+            curl_request_with_body(req_url, req_body_data, req_headers)
 
 
 # vars() to make it iterable
