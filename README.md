@@ -41,11 +41,19 @@ py curl.py --<method> /api/route -u custom_url
 py curl.py --<method> /api/route --url custom_url
 ```
 
-Adding request repeat amount 
-- Set the amount of time the request should be sent; default `1`
+Adding request repeat amount for a period of time
+- Set the amount of time the request should be sent within a period of time; default `1` time only
+
 ```bash
-py curl.py --<method> /api/route -r number_of_times_to_send
+py curl.py --<method> /api/route -r number_of_times_to_send 
 py curl.py --<method> /api/route --repeat number_of_times_to_send
+```
+
+- The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too, to set a time period for the request to be sent
+
+```bash
+py curl.py --<method> /api/route -r number_of_times_to_send -t time_period
+py curl.py --<method> /api/route --repeat number_of_times_to_send --time time_period
 ```
 
 
