@@ -41,6 +41,14 @@ py curl.py --<method> /api/route -u custom_url
 py curl.py --<method> /api/route --url custom_url
 ```
 
+Adding request repeat amount 
+- Set the amount of time the request should be sent; default `1`
+```bash
+py curl.py --<method> /api/route -r number_of_times_to_send
+py curl.py --<method> /api/route --repeat number_of_times_to_send
+```
+
+
 Adding custom headers
 - Else it would only contain one custom header: `"Content-Type: application/json"`
 - Currently only supports adding one extra custom headers; as of now
