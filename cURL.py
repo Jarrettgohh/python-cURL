@@ -89,8 +89,10 @@ def execute_shell_command(shell_command):
     os.system(shell_command)
 
 
-def curl_request_without_body():
-    execute_shell_command(f'curl {req_url}')
+def curl_request_without_body(req_headers):
+
+    execute_shell_command(
+        f'curl' + (f' -H {req_headers} ' if req_headers != '' else ' ') + req_url)
 
 
 def curl_request_with_body(req_url, req_body, req_headers):
@@ -128,7 +130,7 @@ def call_respective_request_function(http_request_type, req_url='', req_body_dat
         req_headers = read_txt_file('req_headers.txt')
 
         if (http_request_type == 'get'):
-            curl_request_without_body()
+            curl_request_without_body(req_headers)
 
         else:
             # Actually is for any request type besides 'GET' even without body; to refactor to be more clear
