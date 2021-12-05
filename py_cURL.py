@@ -152,6 +152,14 @@ def call_respective_request_function(http_request_type,
                                      req_url='',
                                      req_body_data=None):
 
+    edit_req_headers_option = input(
+        prettify_output('\n Edit request headers now? (Y/N)? \n', True))
+    edit_req_headers_now = process_yes_no(edit_req_headers_option)
+
+    # Open the req_headers.txt file to edit the request headers
+    if (edit_req_headers_now):
+        edit_txt_file('req_headers.txt')
+
     for _ in range(int(req_repeat)):
 
         req_headers = read_txt_file('req_headers.txt')
@@ -201,19 +209,6 @@ def main():
                 prettify_output('\n Send with request body data (Y/N)? \n',
                                 True))
             with_req_body = process_yes_no(with_req_body_option)
-
-            edit_req_headers_option = input(
-                prettify_output('\n Edit request headers now? (Y/N)? \n',
-                                True))
-            edit_req_headers_now = process_yes_no(edit_req_headers_option)
-
-            # Open the req_headers.txt file to edit the request headers
-            if (edit_req_headers_now):
-
-                if (not os_path.exists('req_headers.txt')):
-                    f = open('req_headers.txt', 'w+')
-
-                edit_txt_file('req_headers.txt')
 
             # Open req_body.json file to edit the request body
             if (with_req_body):
