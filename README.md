@@ -6,47 +6,47 @@ To run the script
 
 GET
 ```bash
-py curl.py --get /api/route 
+py py_curl.py --get /api/route 
 ```
 
 POST
 - Prompt to select or edit request body
 ```bash
-py curl.py --post /api/route  
+py py_curl.py --post /api/route  
 ```
 
 PUT
 - Prompt to select or edit request body
 ```bash
-py curl.py --put /api/route  
+py py_curl.py --put /api/route  
 ```
 
 DELETE
 - Prompt to select or edit request body
 ```bash
-py curl.py --delete /api/route  
+py py_curl.py --delete /api/route  
 ```
 
 Adding custom path for request body data
 - Else defaults to `req_body.txt`
 ```bash
-py curl.py --<method> /api/route -d custom_path
-py curl.py --<method> /api/route --data custom_path
+py py_curl.py --<method> /api/route -d custom_path
+py py_curl.py --<method> /api/route --data custom_path
  ```
  
 Adding custom url
 - Else defaults to `http://localhost:4000`
 ```bash
-py curl.py --<method> /api/route -u custom_url
-py curl.py --<method> /api/route --url custom_url
+py py_curl.py --<method> /api/route -u custom_url
+py py_curl.py --<method> /api/route --url custom_url
 ```
 
 Adding request repeat amount for a period of time
 - Set the amount of time the request should be sent within a period of time; default `1` time only
 
 ```bash
-py curl.py --<method> /api/route -r number_of_times_to_send 
-py curl.py --<method> /api/route --repeat number_of_times_to_send
+py py_curl.py --<method> /api/route -r number_of_times_to_send 
+py py_curl.py --<method> /api/route --repeat number_of_times_to_send
 ```
 
 - The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too, to set a time period for the request to be sent
