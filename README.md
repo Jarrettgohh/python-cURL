@@ -1,5 +1,16 @@
 # python-cURL
 Python automation to send REST API requests using `cURL`
+
+# Python Version
+- Python 3.10
+
+
+# Package Installation
+- Install neccessary packages
+```
+pip install termcolor
+```
+
 # Usage
 
 To run the script
