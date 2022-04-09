@@ -45,14 +45,14 @@ py py_curl.py --<method> /api/route -d custom_path
 py py_curl.py --<method> /api/route --data custom_path
  ```
  
-Adding custom url
+## Adding custom url
 - Else defaults to `http://localhost:4000`
 ```bash
 py py_curl.py --<method> /api/route -u custom_url
 py py_curl.py --<method> /api/route --url custom_url
 ```
 
-Adding request repeat amount for a period of time
+## Adding request repeat amount for a period of time
 - Set the amount of time the request should be sent within a period of time; default `1` time only
 
 ```bash
@@ -69,7 +69,7 @@ py curl.py --<method> /api/route --repeat number_of_times_to_send --time time_pe
 ```
 
 
-Adding custom headers
+## Adding custom headers
 - Else it would only contain one custom header: `"Content-Type: application/json"`
 - Currently only supports adding one extra custom headers; as of now
 - The script would remove all the `\n` in the contents of req_headers.txt so as to prevent the `cURL` method call from being corrupted -> `.replace('\n', '')`
