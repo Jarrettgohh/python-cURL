@@ -101,6 +101,7 @@ Formats that would give an error (To be improved):
 - Only works with fields containing one layer string; but not nested items such as object or arrays of any sort
 
 # Add-on ideas
+- Support for adding multiple request headers in the `req_headers.txt` file
 - Support for array and object to be sent in the request body
 - Feature to cache the request route URL within a .txt file
 - Sending multiple requests for rate limit testing of server routes
