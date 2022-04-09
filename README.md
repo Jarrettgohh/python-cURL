@@ -38,13 +38,30 @@ DELETE
 py py_curl.py --delete /api/route  
 ```
 
-Adding custom path for request body data
+## Adding custom path for request body data
 - Else defaults to `req_body.txt`
 ```bash
 py py_curl.py --<method> /api/route -d custom_path
 py py_curl.py --<method> /api/route --data custom_path
  ```
  
+### Format the request body data for the POST, PUT or DELETE requests as follows:
+```json
+{
+"name": "random_name",
+"data": "random_data"
+}
+```
+
+Formats that would give an error (To be improved):
+- Comma at the end of the last field
+```json
+{
+"name": "random_name",
+"data": "random_data",
+}
+```
+
 ## Adding custom url
 - Else defaults to `http://localhost:4000`
 ```bash
@@ -78,23 +95,6 @@ py curl.py --<method> /api/route --repeat number_of_times_to_send --time time_pe
 "x-custom-header: header_value"
 ```
 
-
-Format the request body data for the POST, PUT or DELETE requests as follows:
-```json
-{
-"name": "random_name",
-"data": "random_data"
-}
-```
-
-Formats that would give an error (To be improved):
-- Comma at the end of the last field
-```json
-{
-"name": "random_name",
-"data": "random_data",
-}
-```
 
 # To Note
 - Supports any OS that has the `cURL` executable, that can be ran on a proper bash/terminal/command prompt or any type of command shell. To date, this software has only been tested on Window -- Not tested on other OS yet such as MacOS and Linux. However, it would probably work too as these OS suppports `cURL`.
