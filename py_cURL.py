@@ -1,5 +1,5 @@
 import argparse
-from subprocess import PIPE, run
+import subprocess
 import json
 import sys
 import os
@@ -117,7 +117,9 @@ def prettify_output(output, include_borders=False, border_color='white'):
 def execute_shell_command(shell_command):
     # os.system(shell_command)
     
-    output = run(shell_command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
+    PIPE = subprocess.PIPE
+    
+    output = subprocess.run(shell_command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
     output_parsed = json.loads(output.stdout)
     
     pretty_output = prettify_output(prettify_json(output_parsed), include_borders=True, border_color='cyan')
