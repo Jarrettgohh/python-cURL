@@ -6,6 +6,11 @@ import os
 import os.path as os_path
 from termcolor import colored
 
+#
+# Current issues:
+# 1. If there is <br> or > characters present in the string value in the request body, the cURL request will fail
+#
+
 os.system('color')
 
 # To make into .exe
@@ -150,7 +155,6 @@ def curl_request_with_request_type(req_url, req_body, req_headers):
         curl_command = curl_command
 
     curl_command = f'{curl_command} {req_url}'
-    print(curl_command)
 
     execute_shell_command(curl_command)
 
