@@ -1,4 +1,5 @@
 import argparse
+from subprocess import PIPE, run
 import json
 import sys
 import os
@@ -69,8 +70,14 @@ def prompt_edit_now():
     return process_yes_no(edit_now_option)
 
 
+def prettify_json(json_str: str):
+     return json.dumps(json_str, indent=2)
+    
+        
+
 def format_json(req_body):
-    return json.dumps(req_body.replace('\n', ''))
+    formatted_json = json.dumps(req_body.replace('\n', ''))
+    return formatted_json
 
 
 def read_txt_file(txt_file_name):
@@ -100,7 +107,7 @@ def prettify_output(output, include_borders=False, border_color='white'):
         return '\n' + colored(
             '--------------------------------------------------------------------',
             border_color
-        ) + '\n' + f'{output}' + '\n' + colored(
+        ) + '\n\n' + f'{output}' + '\n\n' + colored(
             '--------------------------------------------------------------------',
             border_color) + '\n'
 
@@ -108,16 +115,26 @@ def prettify_output(output, include_borders=False, border_color='white'):
 
 
 def execute_shell_command(shell_command):
-    os.system(shell_command)
+    # os.system(shell_command)
+    
+    output = run(shell_command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
+    output_parsed = json.loads(output.stdout)
+    
+    pretty_output = prettify_output(prettify_json(output_parsed), include_borders=True, border_color='cyan')
+    
+    print(f"\n\n{colored('Response:', 'cyan')}\n{pretty_output}")
+    return pretty_output
+    
 
-
-def curl_request_without_body(req_headers):
+# GET cURL request 
+def GET_curl_request(req_headers):
 
     execute_shell_command(f'curl' + (
         f' -H {req_headers} ' if req_headers != '' else ' ') + req_url)
 
 
-def curl_request_with_body(req_url, req_body, req_headers):
+# For any request type besides 'GET'
+def curl_request_with_request_type(req_url, req_body, req_headers):
 
     curl_command = '\
     curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + (
@@ -131,6 +148,7 @@ def curl_request_with_body(req_url, req_body, req_headers):
         curl_command = curl_command
 
     curl_command = f'{curl_command} {req_url}'
+    print(curl_command)
 
     execute_shell_command(curl_command)
 
@@ -140,10 +158,9 @@ def send_request_with_body(req_body_data=None):
 
     print(
         prettify_output(
-            colored(f'\nSending {http_request_type.upper()} request to ',
-                    'green') + colored(req_url, 'yellow') +
-            colored(f' with body:\n', 'green') +
-            f'{prettify_output(req_body_data)}', True, 'yellow'))
+            f'\nSending {http_request_type.upper()} request to ' + colored(req_url, 'cyan') +
+            f' with body:\n' +
+            f'{prettify_output(req_body_data)}', include_borders=True, border_color='cyan'))
 
     call_respective_request_function(http_request_type, req_url, req_body_data)
 
@@ -153,7 +170,7 @@ def call_respective_request_function(http_request_type,
                                      req_body_data=None):
 
     edit_req_headers_option = input(
-        prettify_output('\n Edit request headers now? (Y/N)? \n', True))
+        prettify_output('\n Edit request headers now? (Y/N)? \n', include_borders=True))
     edit_req_headers_now = process_yes_no(edit_req_headers_option)
 
     # Open the req_headers.txt file to edit the request headers
@@ -165,11 +182,10 @@ def call_respective_request_function(http_request_type,
         req_headers = read_txt_file('req_headers.txt')
 
         if (http_request_type == 'get'):
-            curl_request_without_body(req_headers)
+            GET_curl_request(req_headers)
 
         else:
-            # Actually is for any request type besides 'GET' even without body; to refactor to be more clear
-            curl_request_with_body(req_url, req_body_data, req_headers)
+            curl_request_with_request_type(req_url, req_body_data, req_headers)
 
 
 # vars() to make it iterable
@@ -197,7 +213,7 @@ def main():
         if (http_request_type == None):
             print(
                 prettify_output(
-                    colored('\nPlease select a request type\n', 'red'), True))
+                    colored('\nPlease select a request type\n', 'red'), include_borders=True))
             os.system('py curl.py -h')
             exit()
 
@@ -207,14 +223,14 @@ def main():
 
             with_req_body_option = input(
                 prettify_output('\n Send with request body data (Y/N)? \n',
-                                True))
+                                include_borders=True))
             with_req_body = process_yes_no(with_req_body_option)
 
             # Open req_body.json file to edit the request body
             if (with_req_body):
 
                 if (not os_path.exists('req_body.json')):
-                    f = open('req_body.json', 'w+')
+                    # f = open('req_body.json', 'w+')
 
                     edit_json('req_body.json')
 
@@ -264,9 +280,9 @@ def main():
             if (args['data'] != None):
                 print(
                     prettify_output(
-                        colored(
-                            f'\n\'-d\' flag does not applies for {http_request_type.upper()} request type\n',
-                            'red'), True, 'yellow'))
+                            f'\n The \'-d\' flag does not apply for the {http_request_type.upper()} request type\n', include_borders=True, border_color='red'))
+                
+                sys.exit()
 
             call_respective_request_function(http_request_type)
 
