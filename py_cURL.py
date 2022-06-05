@@ -6,11 +6,6 @@ import os
 import os.path as os_path
 from termcolor import colored
 
-#
-# Current issues:
-# 1. If there is <br> or > characters present in the string value in the request body, the cURL request will fail
-#
-
 os.system('color')
 
 # To make into .exe
@@ -124,13 +119,29 @@ def execute_shell_command(shell_command):
     
     PIPE = subprocess.PIPE
     
-    output = subprocess.run(shell_command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
-    output_parsed = json.loads(output.stdout)
-    
-    pretty_output = prettify_output(prettify_json(output_parsed), include_borders=True, border_color='cyan')
-    
-    print(f"\n\n{colored('Response:', 'cyan')}\n{pretty_output}")
-    return pretty_output
+    try:
+        output = subprocess.run(shell_command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
+        output_stdout = output.stdout
+                    
+        try:
+            output_stdout = json.loads(output_stdout)
+            pretty_output = prettify_output(prettify_json(output_stdout), include_borders=True, border_color='cyan')
+        
+        
+        # Fail to load the json - data type within str is not dict
+        except:
+            pretty_output = prettify_output(output_stdout, include_borders=True, border_color='cyan')
+        
+        
+        print(f"\n\n{colored('Response:', 'cyan')}\n{pretty_output}")
+        
+        return pretty_output
+        
+        
+        
+    except Exception as e:
+        print(e)
+        sys.exit()
     
 
 # GET cURL request 
@@ -155,6 +166,7 @@ def curl_request_with_request_type(req_url, req_body, req_headers):
         curl_command = curl_command
 
     curl_command = f'{curl_command} {req_url}'
+    print(curl_command)
 
     execute_shell_command(curl_command)
 
