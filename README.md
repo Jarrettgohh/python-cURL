@@ -92,8 +92,8 @@ py curl.py --<method> /api/route --repeat number_of_times_to_send --time time_pe
 - Simply enter the header information in the `req_headers.json` file similar to the request body json file:
 ```json
 {
-"name": "random_name",
-"data": "random_data"
+"header_1": "header_1_value",
+"header_2": "header_2_value"
 }
 ```
 
