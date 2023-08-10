@@ -155,9 +155,14 @@ def GET_curl_request(req_headers):
 def curl_request_with_request_type(req_url, req_body, req_headers):
 
     curl_command = '\
-    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"' + (
-        f' -H {req_headers}' if req_headers != '' else '')
-
+    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"'
+    
+    if (req_headers != None):
+        for req_header in req_headers:
+            req_header_formatted = f' -H \"{req_header}: {req_headers[req_header]}\"'
+            curl_command += req_header_formatted
+        
+ 
     if (req_body != None):
         formatted_req_body = format_json(req_body)
         curl_command = f'{curl_command} -d {formatted_req_body}'
@@ -193,11 +198,12 @@ def call_respective_request_function(http_request_type,
 
     # Open the req_headers.txt file to edit the request headers
     if (edit_req_headers_now):
-        edit_txt_file('req_headers.txt')
+        edit_json('req_headers.json')
 
     for _ in range(int(req_repeat)):
 
-        req_headers = read_txt_file('req_headers.txt')
+        req_headers = read_json('req_headers.json')
+            
 
         if (http_request_type == 'get'):
             GET_curl_request(req_headers)
@@ -309,3 +315,5 @@ def main():
 
 
 main()
+
+
