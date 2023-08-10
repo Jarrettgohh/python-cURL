@@ -87,12 +87,14 @@ py curl.py --<method> /api/route --repeat number_of_times_to_send --time time_pe
 
 
 ## Adding custom headers
-- Else it would only contain one custom header: `"Content-Type: application/json"`
+- By default, it would only contain one custom header: `"Content-Type: application/json"`
 - Currently only supports adding one extra custom headers; as of now
-- The script would remove all the `\n` in the contents of req_headers.txt so as to prevent the `cURL` method call from being corrupted -> `.replace('\n', '')`
-- Simply enter the header information in the `req_headers.txt` file with the following format:
+- Simply enter the header information in the `req_headers.json` file similar to the request body json file:
 ```json
-"x-custom-header: header_value"
+{
+"name": "random_name",
+"data": "random_data"
+}
 ```
 
 
