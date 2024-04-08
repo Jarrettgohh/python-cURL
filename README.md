@@ -6,7 +6,7 @@ Python automation to send HTTP requests using `cURL`. Despite the various other 
 
 - Python 3.10 and above
 
-# Create virtual environment using Python
+# Create virtual environment using Python (using Python3.10)
 
 ```bash
 $ python3.10 -m venv `path/to/venv`
@@ -25,41 +25,43 @@ $ pip install -r requirements.txt
 
 To run the script
 
+> > Assume using Python3.10
+
 ## Adding custom url
 
 - Else defaults to `http://localhost:4000`
 
 ```bash
-$ py py_curl.py --<method> /api/route -u `custom_url`
-$ py py_curl.py --<method> /api/route --url `custom_url`
+$ python3.10 py_curl.py --<method> /api/route -u `custom_url`
+$ python3.10 py_curl.py --<method> /api/route --url `custom_url`
 ```
 
 GET
 
 ```bash
-$ py py_curl.py --get /api/route
-$ py py_curl.py --get --url `custom_url`
+$ python3.10 py_curl.py --get /api/route
+$ python3.10 py_curl.py --get --url `custom_url`
 ```
 
 POST
 
 ```bash
-$ py py_curl.py --post /api/route
-$ py py_curl.py --post --url `custom_url`
+$ python3.10 py_curl.py --post /api/route
+$ python3.10 py_curl.py --post --url `custom_url`
 ```
 
 PUT
 
 ```bash
-$ py py_curl.py --put /api/route
-$ py py_curl.py --put --url `custom_url`
+$ python3.10 py_curl.py --put /api/route
+$ python3.10 py_curl.py --put --url `custom_url`
 ```
 
 DELETE
 
 ```bash
-$ py py_curl.py --delete /api/route
-$ py py_curl.py --delete --url `custom_url`
+$ python3.10 py_curl.py --delete /api/route
+$ python3.10 py_curl.py --delete --url `custom_url`
 ```
 
 ## Adding custom path for request body data
@@ -67,8 +69,8 @@ $ py py_curl.py --delete --url `custom_url`
 - Else defaults to `req_body.json`
 
 ```bash
-$ py py_curl.py --<method> /api/route -d `custom_json`.json
-$ py py_curl.py --<method> /api/route --data `custom_json`.json
+$ python3.10 py_curl.py --<method> /api/route -d `custom_json`.json
+$ python3.10 py_curl.py --<method> /api/route --data `custom_json`.json
 ```
 
 ### Format the request body data for the POST, PUT or DELETE requests as follows:
@@ -96,8 +98,8 @@ Formats that would give an error (To be improved):
 - Set the amount of time the request should be sent within a period of time; default `1` time only
 
 ```bash
-$ py py_curl.py --<method> /api/route -r `number_of_times_to_send`
-$ py py_curl.py --<method> /api/route --repeat `number_of_times_to_send`
+$ python3.10 py_curl.py --<method> /api/route -r `number_of_times_to_send`
+$ python3.10 py_curl.py --<method> /api/route --repeat `number_of_times_to_send`
 ```
 
 - The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too, to set a time period for the request to be sent
