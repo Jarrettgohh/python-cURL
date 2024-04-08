@@ -4,61 +4,62 @@ Python automation to send HTTP requests using `cURL`. Despite the various other 
 
 # Python Version
 
-- Python 3.10
+- Python 3.10 and above
 
-# Package Installation
-
-- Install neccessary packages
-
-```
-pip install termcolor
-```
-
-## Adding custom url
-
-- Else defaults to `http://localhost:4000`
+# Create virtual environment using Python
 
 ```bash
-py py_curl.py --<method> /api/route -u `custom_url`
-py py_curl.py --<method> /api/route --url `custom_url`
+$ python3.10 -m venv `path/to/venv`
+$ path/to/venv/scripts/activate
+```
+
+# Package Installation (from within virtual environment)
+
+- Install neccessary packages from `requirements.txt`
+
+```bash
+$ pip install -r requirements.txt
 ```
 
 # Usage
 
 To run the script
 
+## Adding custom url
+
+- Else defaults to `http://localhost:4000`
+
+```bash
+$ py py_curl.py --<method> /api/route -u `custom_url`
+$ py py_curl.py --<method> /api/route --url `custom_url`
+```
+
 GET
 
 ```bash
-py py_curl.py --get /api/route
-py py_curl.py --get --url `custom_url`
+$ py py_curl.py --get /api/route
+$ py py_curl.py --get --url `custom_url`
 ```
 
 POST
 
-- Prompt to select or edit request body
-
 ```bash
-py py_curl.py --post /api/route
-py py_curl.py --post --url `custom_url`
+$ py py_curl.py --post /api/route
+$ py py_curl.py --post --url `custom_url`
 ```
 
 PUT
 
-- Prompt to select or edit request body
-
 ```bash
-py py_curl.py --put /api/route
-py py_curl.py --put --url `custom_url`
+$ py py_curl.py --put /api/route
+$ py py_curl.py --put --url `custom_url`
 ```
 
 DELETE
 
-- Prompt to select or edit request body
-
 ```bash
-py py_curl.py --delete /api/route
-py py_curl.py --delete --url `custom_url`
+$ py py_curl.py --delete /api/route
+$ py py_curl.py --delete --url `custom_url`
 ```
 
 ## Adding custom path for request body data
@@ -66,8 +67,8 @@ py py_curl.py --delete --url `custom_url`
 - Else defaults to `req_body.json`
 
 ```bash
-py py_curl.py --<method> /api/route -d `custom_json`.json
-py py_curl.py --<method> /api/route --data `custom_json`.json
+$ py py_curl.py --<method> /api/route -d `custom_json`.json
+$ py py_curl.py --<method> /api/route --data `custom_json`.json
 ```
 
 ### Format the request body data for the POST, PUT or DELETE requests as follows:
@@ -95,16 +96,16 @@ Formats that would give an error (To be improved):
 - Set the amount of time the request should be sent within a period of time; default `1` time only
 
 ```bash
-py py_curl.py --<method> /api/route -r `number_of_times_to_send`
-py py_curl.py --<method> /api/route --repeat `number_of_times_to_send`
+$ py py_curl.py --<method> /api/route -r `number_of_times_to_send`
+$ py py_curl.py --<method> /api/route --repeat `number_of_times_to_send`
 ```
 
 - The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too, to set a time period for the request to be sent
 - The time `-t` or `--time` defaults to `1 minute`
 
 ```bash
-py curl.py --<method> /api/route -r `number_of_times_to_send` -t `time_period`
-py curl.py --<method> /api/route --repeat `number_of_times_to_send` --time `time_period`
+$ py curl.py --<method> /api/route -r `number_of_times_to_send` -t `time_period`
+$ py curl.py --<method> /api/route --repeat `number_of_times_to_send` --time `time_period`
 ```
 
 ## Adding custom headers
@@ -129,8 +130,8 @@ py curl.py --<method> /api/route --repeat `number_of_times_to_send` --time `time
 
 - Use the @ with -d or --data flag instead
 
-```
-curl -X POST -d @req_body.json https://...
+```bash
+$ curl -X POST -d @req_body.json https://...
 ```
 
 - Support for array and object to be sent in the request body
