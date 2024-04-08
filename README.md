@@ -8,6 +8,8 @@ Python automation to send HTTP requests using `cURL`. Despite the various other 
 
 # Create virtual environment using Python (using Python3.10)
 
+> Using Python3.10
+
 ```bash
 $ python3.10 -m venv `path/to/venv`
 $ path/to/venv/scripts/activate
@@ -25,7 +27,7 @@ $ pip install -r requirements.txt
 
 To run the script
 
-> > Assume using Python3.10
+> Assume using Python3.10
 
 ## Adding custom url
 
