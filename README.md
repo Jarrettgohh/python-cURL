@@ -84,17 +84,6 @@ $ python3.10 py_curl.py --<method> /api/route --data `custom_json`.json
 }
 ```
 
-Formats that would give an error (To be improved):
-
-- Comma at the end of the last field
-
-```json
-{
-  "name": "random_name",
-  "data": "random_data"
-}
-```
-
 ## Adding request repeat amount for a period of time
 
 - Set the amount of time the request should be sent within a period of time; default `1` time only
