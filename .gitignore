@@ -1,2 +1,4 @@
 *.json
 *.txt
+VENV
+/notes

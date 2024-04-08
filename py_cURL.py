@@ -6,6 +6,7 @@ import os
 import os.path as os_path
 from termcolor import colored
 
+
 os.system('color')
 
 # To make into .exe
@@ -15,25 +16,34 @@ os.system('color')
 
 parser = argparse.ArgumentParser(
     description='HTTP GET, POST, PUT and DELETE request using cURL')
+
 parser.add_argument(
     '--get',
     type=str,
     help='GET request',
+    nargs='?',
+    const=''
 )
 parser.add_argument(
     '--post',
     type=str,
     help='POST request',
+    nargs='?',
+    const=''
 )
 parser.add_argument(
     '--put',
     type=str,
     help='PUT request',
+    nargs='?',
+    const=''
 )
 parser.add_argument(
     '--delete',
     type=str,
     help='DELETE request',
+    nargs='?',
+    const=''
 )
 parser.add_argument(
     '-d',
@@ -56,6 +66,21 @@ parser.add_argument(
 )
 
 
+def generate_request_headers_list(req_headers: dict):
+    request_headers_list = []
+
+    for req_header in req_headers:
+        req_header_formatted = f'{req_header}: {req_headers[req_header]}'
+        request_headers_list.extend(['-H', req_header_formatted])
+
+    return request_headers_list
+
+
+def format_json(req_body):
+    formatted_json = json.dumps(req_body.replace('\n', ''))
+    return formatted_json
+
+
 def process_yes_no(text):
     if ('y' in text or 'Y' in text):
         return True
@@ -71,13 +96,7 @@ def prompt_edit_now():
 
 
 def prettify_json(json_str: str):
-     return json.dumps(json_str, indent=2)
-    
-        
-
-def format_json(req_body):
-    formatted_json = json.dumps(req_body.replace('\n', ''))
-    return formatted_json
+    return json.dumps(json_str, indent=2)
 
 
 def read_txt_file(txt_file_name):
@@ -99,7 +118,13 @@ def edit_json(json_file_name):
 
 def read_json(json_file_name):
     with open(json_file_name) as file:
-        return json.load(file)
+
+        json_content = json.load(file)
+
+        if not bool(json_content):
+            return None
+
+        return json_content
 
 
 def prettify_output(output, include_borders=False, border_color='white'):
@@ -114,66 +139,94 @@ def prettify_output(output, include_borders=False, border_color='white'):
     return f'\n{output}\n'
 
 
-def execute_shell_command(shell_command):
-    # os.system(shell_command)
-    
+def execute_curl_command(curl_command_list: list[str]):
+
     PIPE = subprocess.PIPE
-    
+
+    curl_command_list.append('--silent')
+    # prevent revocation checks - might cause issues if there is an antivirus with web shield enabled
+    curl_command_list.append('--ssl-no-revoke')
+
+    curl_command_display = ' '.join(curl_command_list)
+    print(curl_command_display)
+
     try:
-        output = subprocess.run(shell_command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
+        output = subprocess.run(
+            curl_command_list, stdout=PIPE, universal_newlines=True, check=True, shell=False)
+
         output_stdout = output.stdout
-                    
+
         try:
             output_stdout = json.loads(output_stdout)
-            pretty_output = prettify_output(prettify_json(output_stdout), include_borders=True, border_color='cyan')
-        
-        
+            pretty_output = prettify_output(prettify_json(
+                output_stdout), include_borders=True, border_color='cyan')
+
         # Fail to load the json - data type within str is not dict
         except:
-            pretty_output = prettify_output(output_stdout, include_borders=True, border_color='cyan')
-        
-        
-        print(f"\n\n{colored('Response:', 'cyan')}\n{pretty_output}")
-        
-        return pretty_output
-        
-        
-        
-    except Exception as e:
-        print(e)
-        sys.exit()
-    
+            pretty_output = prettify_output(
+                output_stdout, include_borders=True, border_color='cyan')
 
-# GET cURL request 
+        print(f"\n\n{colored('Response:', 'cyan')}\n{pretty_output}")
+
+        return pretty_output
+
+    except subprocess.CalledProcessError as e:
+        print('error')
+        print(e)
+
+    except Exception as e:
+        print(e.output)
+        sys.exit()
+
+
+# GET cURL request
 def GET_curl_request(req_headers):
 
-    execute_shell_command(f'curl' + (
-        f' -H {req_headers} ' if req_headers != '' else ' ') + req_url)
+    curl_command_list = ['curl', req_url]
+
+    default_req_headers = {
+        "Content-Type": "application/json"
+    }
+
+    if (req_headers != None):
+        req_headers = dict(default_req_headers, **req_headers)
+
+    else:
+        req_headers = default_req_headers
+
+    request_headers_list = generate_request_headers_list(req_headers)
+
+    curl_command_list.extend(request_headers_list)
+
+    execute_curl_command(curl_command_list)
 
 
 # For any request type besides 'GET'
-def curl_request_with_request_type(req_url, req_body, req_headers):
+def curl_request_with_request_type(req_url: str, req_body: dict, req_headers: dict):
 
-    curl_command = '\
-    curl' + f' --request {http_request_type.upper()}' + ' -H \"Content-Type: application/json\"'
-    
+    curl_command_list = ['curl', '--request',
+                         http_request_type.upper(), req_url]
+
+    default_req_headers = {
+        "Content-Type": "application/json"
+    }
+
     if (req_headers != None):
-        for req_header in req_headers:
-            req_header_formatted = f' -H \"{req_header}: {req_headers[req_header]}\"'
-            curl_command += req_header_formatted
-        
- 
-    if (req_body != None):
-        formatted_req_body = format_json(req_body)
-        curl_command = f'{curl_command} -d {formatted_req_body}'
+        req_headers = dict(default_req_headers, **req_headers)
 
     else:
-        curl_command = curl_command
+        req_headers = default_req_headers
 
-    curl_command = f'{curl_command} {req_url}'
-    print(curl_command)
+    request_headers_list = generate_request_headers_list(req_headers)
 
-    execute_shell_command(curl_command)
+    curl_command_list.extend(request_headers_list)
+
+    if (req_body != None):
+
+        formatted_req_body = format_json(req_body)
+        curl_command_list.extend(['-d', formatted_req_body])
+
+    execute_curl_command(curl_command_list)
 
 
 def send_request_with_body(req_body_data=None):
@@ -196,14 +249,13 @@ def call_respective_request_function(http_request_type,
         prettify_output('\n Edit request headers now? (Y/N)? \n', include_borders=True))
     edit_req_headers_now = process_yes_no(edit_req_headers_option)
 
-    # Open the req_headers.txt file to edit the request headers
+    # Open the req_headers.json file to edit the request headers
     if (edit_req_headers_now):
         edit_json('req_headers.json')
 
     for _ in range(int(req_repeat)):
 
         req_headers = read_json('req_headers.json')
-            
 
         if (http_request_type == 'get'):
             GET_curl_request(req_headers)
@@ -238,7 +290,7 @@ def main():
             print(
                 prettify_output(
                     colored('\nPlease select a request type\n', 'red'), include_borders=True))
-            os.system('py curl.py -h')
+            os.system('py py_curl.py -h')
             exit()
 
         # Request type is POST, PUT or DElETE with NO `-d` parameter passed in
@@ -304,8 +356,8 @@ def main():
             if (args['data'] != None):
                 print(
                     prettify_output(
-                            f'\n The \'-d\' flag does not apply for the {http_request_type.upper()} request type\n', include_borders=True, border_color='red'))
-                
+                        f'\n The \'-d\' flag does not apply for the {http_request_type.upper()} request type\n', include_borders=True, border_color='red'))
+
                 sys.exit()
 
             call_respective_request_function(http_request_type)
@@ -315,5 +367,3 @@ def main():
 
 
 main()
-
-
