@@ -68,7 +68,7 @@ $ python3.10 py_curl.py --delete --url `custom_url`
 
 ## Adding custom path for request body data
 
-- Else defaults to `req_body.json`
+- Else defaults to `req_body.json` (as specified in the default `config.json`)
 
 ```bash
 $ python3.10 py_curl.py --<method> /api/route -d `custom_json`.json
@@ -86,17 +86,14 @@ $ python3.10 py_curl.py --<method> /api/route --data `custom_json`.json
 
 ## Adding request repeat amount for a period of time
 
-- Set the amount of time the request should be sent within a period of time; default `1` time only
+- Set the amount of time the request should be sent within a period of time; default `1` time only (as specified in the default `config.json`)
 
 ```bash
 $ python3.10 py_curl.py --<method> /api/route -r `number_of_times_to_send`
 $ python3.10 py_curl.py --<method> /api/route --repeat `number_of_times_to_send`
 ```
 
-> NOT IMPLEMENTED YET (pending)
-
-- The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too, to set a time period for the request to be sent
-- The time `-t` or `--time` defaults to `1 minute`
+- The `-r` or `--repeat` field could be used together with the `-t` or `--time` flag too. This flag is to set the time interval between each request in seconds. (default 1 second - as specified in the default `config.json`)
 
 ```bash
 $ py curl.py --<method> /api/route -r `number_of_times_to_send` -t `time_period`
@@ -106,7 +103,6 @@ $ py curl.py --<method> /api/route --repeat `number_of_times_to_send` --time `ti
 ## Adding custom headers
 
 - By default, it would only contain one custom header: `"Content-Type: application/json"`
-- Currently only supports adding one extra custom headers; as of now
 - Simply enter the header information in the `req_headers.json` file similar to the request body json file:
 
 ```json
@@ -115,6 +111,16 @@ $ py curl.py --<method> /api/route --repeat `number_of_times_to_send` --time `ti
   "header_2": "header_2_value"
 }
 ```
+
+# config.json
+
+The following `config.json` values can be updated. These values are overwriten by the input flags if provided.
+
+- `url_endpoint`: Custom URL (-u, --url flag)
+- `req_body_json_file_location`: Request body data json file location (-d, --d flag)
+- `req_headers_json_file_location`: Request headers data json file location (no flag)
+- `req_repeat`: Set the amount of time the request should be sent within a period of time (-r , --repeat flag)
+- `time_interval_secs`: Set the time interval between each request in seconds (-t, --time flag)
 
 # To Note
 

@@ -1,0 +1,7 @@
+{
+  "url_endpoint": "http://localhost:4000",
+  "req_body_json_file_location": "req_body.json",
+  "req_headers_json_file_location": "req_headers.json",
+  "req_repeat": 2,
+  "time_interval_secs": 2
+}

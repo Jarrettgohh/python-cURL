@@ -1,4 +1,5 @@
 *.json
+!config.json
 *.txt
 VENV
 /notes

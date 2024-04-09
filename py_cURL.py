@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import json
 import sys
+import time
 import os
 import os.path as os_path
 from termcolor import colored
@@ -61,8 +62,15 @@ parser.add_argument(
 parser.add_argument(
     '-r',
     '--repeat',
-    type=str,
+    type=int,
     help='Set the amount of times the request should be sent, defaults to 1.',
+)
+
+parser.add_argument(
+    '-t',
+    '--time',
+    type=int,
+    help='Set the time interval between each request in seconds. (default 1 second)'
 )
 
 
@@ -139,6 +147,15 @@ def prettify_output(output, include_borders=False, border_color='white'):
     return f'\n{output}\n'
 
 
+def throw_error_and_exit(output: str):
+    print('\n')
+    print('Error:')
+    print(output)
+    print('\n')
+
+    sys.exit()
+
+
 def execute_curl_command(curl_command_list: list[str]):
 
     PIPE = subprocess.PIPE
@@ -188,7 +205,7 @@ def GET_curl_request(req_headers):
         "Content-Type": "application/json"
     }
 
-    if (req_headers != None):
+    if (req_headers is not None):
         req_headers = dict(default_req_headers, **req_headers)
 
     else:
@@ -211,7 +228,7 @@ def curl_request_with_request_type(req_url: str, req_body: dict, req_headers: di
         "Content-Type": "application/json"
     }
 
-    if (req_headers != None):
+    if (req_headers is not None):
         req_headers = dict(default_req_headers, **req_headers)
 
     else:
@@ -221,7 +238,7 @@ def curl_request_with_request_type(req_url: str, req_body: dict, req_headers: di
 
     curl_command_list.extend(request_headers_list)
 
-    if (req_body != None):
+    if (req_body is not None):
 
         formatted_req_body = format_json(req_body)
         curl_command_list.extend(['-d', formatted_req_body])
@@ -249,13 +266,13 @@ def call_respective_request_function(http_request_type,
         prettify_output('\n Edit request headers now? (Y/N)? \n', include_borders=True))
     edit_req_headers_now = process_yes_no(edit_req_headers_option)
 
-    # Open the req_headers.json file to edit the request headers
+    # Open the request headers file location to edit the request headers
     if (edit_req_headers_now):
-        edit_json('req_headers.json')
+        edit_json(req_headers_json_file_location)
 
-    for _ in range(int(req_repeat)):
+    for i in range(int(req_repeat)):
 
-        req_headers = read_json('req_headers.json')
+        req_headers = read_json(req_headers_json_file_location)
 
         if (http_request_type == 'get'):
             GET_curl_request(req_headers)
@@ -263,18 +280,76 @@ def call_respective_request_function(http_request_type,
         else:
             curl_request_with_request_type(req_url, req_body_data, req_headers)
 
+        # second condition checks that its not the final iteration of the loop
+        if time_interval_secs is not None and not (i == (int(req_repeat) - 1)):
+            time.sleep(time_interval_secs)
+
+
+def is_all_items_of_type(item_type: type, items: list):
+    for i in items:
+        if type(i) is not item_type:
+            return False
+
+    return True
+
+
+url = ''
+req_body_json_file_location = ''
+req_headers_json_file_location = ''
+req_repeat = None
+time_interval_secs = None
+
+
+config_json_data = read_json('config.json')
+
+
+if config_json_data is None:
+    throw_error_and_exit('config.json file must not be empty.')
+
+
+elif not all(config_json_data.values()):
+    throw_error_and_exit('config.json file values must not be empty.')
+
+
+else:
+    url = config_json_data['url_endpoint']
+    req_body_json_file_location = config_json_data['req_body_json_file_location']
+    req_headers_json_file_location = config_json_data['req_headers_json_file_location']
+    req_repeat = config_json_data['req_repeat']
+    time_interval_secs = config_json_data['time_interval_secs']
+
+    str_list = [url, req_body_json_file_location,
+                req_headers_json_file_location]
+
+    int_list = [req_repeat, time_interval_secs]
+
+    if not is_all_items_of_type(str, str_list) or not is_all_items_of_type(int, int_list):
+        throw_error_and_exit(
+            'A value in the config.json is not of apprioprate type!')
+
 
 # vars() to make it iterable
 args = vars(parser.parse_args())
 
-url = 'http://localhost:4000' if args['url'] == None else args['url']
+#
+# Overwrite from input flags
+#
+if args['url'] is not None:
+    url = args['url']
+
+if args['repeat'] is not None:
+    req_repeat = args['repeat']
+
+if args['time'] is not None:
+    time_interval_secs = args['time']
+
 req_types = ['get', 'post', 'put', 'delete']
-req_repeat = 1 if args['repeat'] == None else args['repeat']
+
 
 http_request_type = None
 
 for req_type in req_types:
-    if args[req_type] == None:
+    if args[req_type] is None:
         continue
 
     else:
@@ -284,9 +359,10 @@ for req_type in req_types:
 
 def main():
     try:
+
         # Request type not specified
         # Print the help message
-        if (http_request_type == None):
+        if (http_request_type is None):
             print(
                 prettify_output(
                     colored('\nPlease select a request type\n', 'red'), include_borders=True))
@@ -295,38 +371,43 @@ def main():
 
         # Request type is POST, PUT or DElETE with NO `-d` parameter passed in
         if ((http_request_type == 'post' or http_request_type == 'put'
-             or http_request_type == 'delete') and args['data'] == None):
+             or http_request_type == 'delete') and args['data'] is None):
 
-            with_req_body_option = input(
-                prettify_output('\n Send with request body data (Y/N)? \n',
-                                include_borders=True))
-            with_req_body = process_yes_no(with_req_body_option)
+            try:
 
-            # Open req_body.json file to edit the request body
-            if (with_req_body):
+                with_req_body_option = input(
+                    prettify_output('\n Send with request body data (Y/N)? \n',
+                                    include_borders=True))
+                with_req_body = process_yes_no(with_req_body_option)
 
-                if (not os_path.exists('req_body.json')):
-                    # f = open('req_body.json', 'w+')
+                # Open req_body.json file to edit the request body
+                if (with_req_body):
 
-                    edit_json('req_body.json')
+                    if (not os_path.exists(req_body_json_file_location)):
+
+                        edit_json(req_body_json_file_location)
+
+                    else:
+                        edit_now = prompt_edit_now()
+
+                        if (edit_now):
+                            edit_json(req_body_json_file_location)
+
+                    req_body_data = read_json(req_body_json_file_location)
+
+                    if (req_body_data != ''):
+                        send_request_with_body(req_body_data)
+
+                    else:
+                        throw_error_and_exit('Request body is empty.')
 
                 else:
-                    edit_now = prompt_edit_now()
+                    call_respective_request_function(
+                        http_request_type, req_url)
 
-                    if (edit_now):
-                        edit_json('req_body.json')
-
-                req_body_data = read_json('req_body.json')
-
-                if (req_body_data != ''):
-                    send_request_with_body(req_body_data)
-
-                else:
-                    print('Request body is empty')
-                    exit()
-
-            else:
-                call_respective_request_function(http_request_type, req_url)
+            except:
+                throw_error_and_exit(
+                    'Please input a valid file location. The file path given for either the request body or headers json file location could not be found.')
 
         # Request type is POST, PUT or DElETE with `-d` flag passed in
         elif ((http_request_type == 'post' or http_request_type == 'put'
@@ -343,17 +424,17 @@ def main():
                     send_request_with_body(req_body_data)
 
                 else:
-                    print('Request body is empty')
-                    exit()
+                    throw_error_and_exit('Request body is empty.')
 
             except:
-                print('Please input a valid file location')
+                throw_error_and_exit(
+                    'Please input a valid file location. The file path given for either the request body or headers json file location could not be found.')
 
         # GET request
         else:
 
             # If `-d` flag passed in -> Display error message
-            if (args['data'] != None):
+            if (args['data'] is not None):
                 print(
                     prettify_output(
                         f'\n The \'-d\' flag does not apply for the {http_request_type.upper()} request type\n', include_borders=True, border_color='red'))
