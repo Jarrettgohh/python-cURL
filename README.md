@@ -10,9 +10,18 @@ Python automation to send HTTP requests using `cURL`. Despite the various other 
 
 > Using Python3.10
 
+- Create
 ```bash
 $ python3.10 -m venv `path/to/venv`
+```
+
+- Activate
+```
 $ path/to/venv/scripts/activate
+```
+OR
+```
+$ source path/to/venv/bin/activate
 ```
 
 # Package Installation (from within virtual environment)
